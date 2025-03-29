@@ -4,7 +4,7 @@ const path = require("path");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT; // Azure menentukan port secara otomatis
+const PORT = process.env.PORT || 8080;
 const API_KEY = process.env.OPENWEATHER_API_KEY;
 
 // Debugging: Cek apakah API Key tersedia
