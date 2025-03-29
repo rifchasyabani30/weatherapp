@@ -2,22 +2,21 @@ const express = require("express");
 const axios = require("axios");
 const path = require("path");
 const cors = require("cors");
-require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT; // Azure menentukan port secara otomatis
 const API_KEY = process.env.OPENWEATHER_API_KEY;
 
 // Debugging: Cek apakah API Key tersedia
 console.log("API Key:", API_KEY ? "Tersedia" : "Tidak ditemukan");
 
 // Middleware
+app.use(cors());
 app.use(express.static(__dirname)); // Gunakan root sebagai static folder
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "index.html")); // Arahkan langsung ke root
 });
-
 
 app.get("/api/weather", async (req, res) => {
     const city = req.query.city;
@@ -47,5 +46,5 @@ app.get("/api/weather", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server berjalan di http://localhost:${PORT}`);
+    console.log(`Server berjalan di port ${PORT}`);
 });
