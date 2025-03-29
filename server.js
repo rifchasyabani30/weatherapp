@@ -1,24 +1,32 @@
 const express = require("express");
 const axios = require("axios");
 const path = require("path");
+const cors = require("cors");
 require("dotenv").config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const API_KEY = process.env.OPENWEATHER_API_KEY; 
+const API_KEY = process.env.OPENWEATHER_API_KEY;
 
+// Debugging: Cek apakah API Key tersedia
+console.log("API Key:", API_KEY ? "Tersedia" : "Tidak ditemukan");
+
+// Middleware
+app.use(cors()); // Mengizinkan CORS
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-
-
 app.get("/api/weather", async (req, res) => {
     const city = req.query.city;
     if (!city) {
         return res.json({ error: "Kota tidak boleh kosong" });
+    }
+
+    if (!API_KEY) {
+        return res.json({ error: "API Key tidak ditemukan. Pastikan sudah dikonfigurasi dengan benar di Azure." });
     }
 
     try {
@@ -33,7 +41,8 @@ app.get("/api/weather", async (req, res) => {
             weather: weatherData.weather[0].description,
         });
     } catch (error) {
-        res.json({ error: "Gagal mendapatkan data cuaca" });
+        console.error("Error mengambil data cuaca:", error.response ? error.response.data : error.message);
+        res.json({ error: "Gagal mendapatkan data cuaca. Periksa API Key atau kota yang dimasukkan." });
     }
 });
 
