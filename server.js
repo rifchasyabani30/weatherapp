@@ -12,12 +12,12 @@ const API_KEY = process.env.OPENWEATHER_API_KEY;
 console.log("API Key:", API_KEY ? "Tersedia" : "Tidak ditemukan");
 
 // Middleware
-app.use(cors()); // Mengizinkan CORS
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(__dirname)); // Gunakan root sebagai static folder
 
 app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
+    res.sendFile(path.join(__dirname, "index.html")); // Arahkan langsung ke root
 });
+
 
 app.get("/api/weather", async (req, res) => {
     const city = req.query.city;
